@@ -3,6 +3,8 @@
 // This is a sample, showing how to use the request module to create a 
 // Http 'long polling' connection for use with the XMS REST API
 // then will peform a simple call flow of "play followed by record"
+// 
+// This project can be found at - https://github.com/DanWolanski/ClickToCall-Demo 
 //
 // This script is dependant on the following npm packages
 //			request - Simplified HTTP request client.
@@ -14,7 +16,9 @@
 //			ws - Simple to use, blazing fast and thoroughly tested WebSocket client and server
 //			uid-generator - Generates random tokens with custom size and base-encoding using the RFC 4122 v4 UUID algorithm
 //			promise - This is a simple implementation of Promises
-
+//			https - Build in https server for ecrypted WS
+//			ip - IP address processing library
+//			path - Path processing module
 
 var argv = require('yargs')
 	.usage('Usage: $0 -h [hostename] -p [port] -a [appid] -l [loglevel]')
@@ -90,13 +94,25 @@ var SiptoWsHrefMap=[];
 ///////////////////////////////////////////////////////////////////////////////
 //WebSocket Interface
 ////////////////////////////////////////////////////////////////////////////////
-
+logger.log('info','******************************');
+logger.log('info','* STARTING WebSocket Service *');
+logger.log('info','******************************');
 const WebSocket = require('ws');
+const https = require('https');
+var fs = require('fs');
+var ip = require('ip');
+var path = require('path');
 
-wss = new WebSocket.Server({
-	port: argv.wssport
-    
-});
+const server = https.createServer({
+  cert: fs.readFileSync('./sslcert/cert.pem'),
+  key: fs.readFileSync('./sslcert/key.pem')
+},OnRequest).listen(argv.wssport);
+
+wss = new WebSocket.Server({server});
+
+logger.log('info','Secure Server running at https://'+ip.address()+':'+argv.wssport);
+logger.log('info','WebSocket Waiting on connection to port '+argv.wssport);
+server.listen(argv.wssport);
 function heartbeat(){
 	this.isAlive = true;
 }
@@ -193,7 +209,71 @@ const interval = setInterval(function ping() {
     ws.ping('', false, true);
   });
 }, 30000);
-    
+
+///////////////////////////////////////////////////////////////////////////////
+// HTTPS server Request
+///////////////////////////////////////////////////////////////////////////////
+var htmlpath='./html';
+
+function OnRequest(request, response) {
+    logger.log('verbose','Http Request Received req url='+request.url);
+//    logger.log('silly',request);
+    var filePath = htmlpath + request.url;
+    if (request.url == '/')
+        filePath = htmlpath+'/Click2Call.html';
+    logger.debug('Fetching '+filePath);
+    var extname = path.extname(filePath);
+    var contentType = 'text/html';
+    switch (extname) {
+        case '.js':
+            contentType = 'text/javascript';
+            break;
+        case '.css':
+            contentType = 'text/css';
+            break;
+        case '.json':
+            contentType = 'application/json';
+            break;
+        case '.png':
+            contentType = 'image/png';
+            break;      
+        case '.jpg':
+            contentType = 'image/jpg';
+            break;
+        case '.wav':
+            contentType = 'audio/x-wav';
+	    break;
+	case '.amr':
+	    contentType = 'audio/amr';
+            break;
+    }
+
+    fs.readFile(filePath, function(error, content) {
+        if (error) {
+            if(error.code == 'ENOENT'){
+				logger.log('debug','Request Complete - File Not Found 404 sent');
+				response.writeHead(404);
+				response.end();
+                //fs.readFile('./404.html', function(error, content) {
+                //    response.writeHead(200, { 'Content-Type': contentType });
+                //    response.end(content, 'utf-8');
+                //});
+            }
+            else {
+                response.writeHead(500);
+                response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
+                response.end(); 
+				logger.log('debug','Request Complete - Error '+error.code);
+            }
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.end(content, 'utf-8');
+            logger.log('debug','Request Complete Successful (contentType:'+contentType+')');
+        }
+    });
+
+}
 ///////////////////////////////////////////////////////////////////////////////
 //XMS FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////

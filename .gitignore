@@ -45,3 +45,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#node modules
+node_modules
+
+#log files from run
+node-xms.txt
+Logs

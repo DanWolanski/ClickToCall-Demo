@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html id="home" lang="en">
+    
+    <head>
+       
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <!-- link rel="stylesheet" href="https://www.webrtc-experiment.com/style.css" -->
+        
+        <style>
+            audio, video {
+                -moz-transition: all 1s ease;
+                -ms-transition: all 1s ease;
+                
+                -o-transition: all 1s ease;
+                -webkit-transition: all 1s ease;
+                transition: all 1s ease;
+                vertical-align: top;
+            }
+
+            input {
+                border: 1px solid #d9d9d9;
+                border-radius: 1px;
+                font-size: 2em;
+                margin: .2em;
+                width: 30%;
+            }
+
+            .setup {
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+                font-size: 102%;
+                height: 47px;
+                margin-left: -9px;
+                margin-top: 8px;
+                position: absolute;
+            }
+
+            p { padding: 1em; }
+
+            li {
+                border-bottom: 1px solid rgb(189, 189, 189);
+                border-left: 1px solid rgb(189, 189, 189);
+                padding: .5em;
+            }
+            
+            .videos-container {
+                display: inline-block;               
+                border: 2px solid black;
+                padding: .1em;
+                border-radius: 0.2em;
+                margin: 2em .2em;               	
+                background: white;
+                vertical-align: top;
+            }
+            .videos-container h2 {
+                border: 0;
+                border-top: 1px solid black;
+                margin: 0;
+                text-align: center;
+                display:block;
+            }
+            video {
+                width:40em;
+                height: 30em;
+                background: black;
+            }
+        </style>    
+</head>
+    
+    
+    <body>
+        <article> 
+            <header style="text-align: center;">
+               
+            </header>
+        
+            <div id="video_box" style="text-align:center;">
+                
+                    <video id="remoteVideo" autoplay controls></video>
+            </div>
+                
+            
+            <div id="localVideoContainer" style="style="opacity: 1; transition-property: opacity; transition-duration: 2s; left: 5px; top: 6px;"" class="ui-draggable">
+                    <video width="108" height="80" id="localVideo" autoplay="autoplay" muted hidden style="opacity: 1;">
+                    </video>
+                </div>
+            
+            
+        </article>
+            <div id="controls" style="text-align:center;">
+                <button id="ConnectServerWSButton">Connect Websocket</button>
+                <!-- TODO - Change this to support secure WebSocket -->
+                <input style="font-size: 10pt" type="url" name="websocket server" size="60" id="ServerAddr" value="ws://127.0.0.1:8800"/><br />
+                <button id="callButton" disabled>Call</button><button id="hangupButton" disabled>Hangup</button>
+            </div>
+        
+    </body>
+    
+    <script src="./js/adapter.js"></script>
+    <script src="./js/common.js"></script>
+    <script src="./js/main.js"></script>
+                                  
+</html>

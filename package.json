@@ -1,0 +1,32 @@
+{
+  "name": "click2call",
+  "version": "1.0.0",
+  "description": "Simple click2call demo for use with the Dialogic PowerMedia XMS",
+  "main": "node-xms-clicktocall.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanWolanski/ClickToCall-Demo.git"
+  },
+  "author": "Dan Wolanski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanWolanski/ClickToCall-Demo/issues"
+  },
+  "homepage": "https://github.com/DanWolanski/ClickToCall-Demo#readme",
+  "dependencies": {
+    "events": "^1.1.1",
+    "https": "^1.0.0",
+    "ip": "^1.1.5",
+    "keypress": "^0.2.1",
+    "path": "^0.12.7",
+    "request": "^2.83.0",
+    "uid-generator": "^1.0.0",
+    "winston": "^2.4.0",
+    "ws": "^3.3.3",
+    "xml2js": "^0.4.19",
+    "yargs": "^10.0.3"
+  }
+}

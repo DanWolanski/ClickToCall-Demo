@@ -15,7 +15,6 @@
 //			winston - A multi-transport async logging library for node.js
 //			ws - Simple to use, blazing fast and thoroughly tested WebSocket client and server
 //			uid-generator - Generates random tokens with custom size and base-encoding using the RFC 4122 v4 UUID algorithm
-//			promise - This is a simple implementation of Promises
 //			https - Build in https server for ecrypted WS
 //			ip - IP address processing library
 //			path - Path processing module
